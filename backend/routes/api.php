@@ -1,12 +1,18 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TransacoesController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::group(['prefix'=>'transacoes'], function($router){
+    Route::post('', [TransacoesController::class, 'cadastrar']);
+    Route::get('balanco/{id}', [TransacoesController::class, 'balanco']);
 });
 
 
