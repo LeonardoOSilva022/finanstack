@@ -6,29 +6,27 @@ use App\Http\Controllers\UsuarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::group(['prefix'=>'transacoes'], function($router){
-    Route::post('', [TransacoesController::class, 'cadastrar']);
-    Route::get('balanco/{id}', [TransacoesController::class, 'balanco']);
-});
-
 
 Route::post('register',  [UsuarioController::class, 'register']);
+Route::post('auth/login', [AuthController::class, 'login']);
 
-Route::group([
+Route::group(['middleware' => 'auth:api'], function($router){
 
-    'middleware' => 'api',
-    'prefix' => 'auth'
+    Route::group(['prefix'=>'transacoes'], function($router){
+        Route::post('', [TransacoesController::class, 'cadastrar']);
+        Route::get('balanco/{id}', [TransacoesController::class, 'balanco']);
+    });
 
-], function ($router) {
+    Route::prefix('categorias')->group(function(){
+        //
+    });
 
-    Route::get('{id}',  [UsuarioController::class, 'findOne']);
-    Route::post('login',  [AuthController::class, 'login']);
-    Route::post('logout',  [AuthController::class, 'logout']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
-    Route::post('me', [AuthController::class, 'me']);
+
+    Route::prefix('auth')->group(function(){
+        Route::get('{id}',  [UsuarioController::class, 'findOne']);
+        Route::post('logout',  [AuthController::class, 'logout']);
+        Route::post('refresh', [AuthController::class, 'refresh']);
+        Route::post('me', [AuthController::class, 'me']);
+    });
 
 });
