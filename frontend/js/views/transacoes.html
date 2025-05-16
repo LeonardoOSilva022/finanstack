@@ -1,0 +1,89 @@
+<div class="home-container">
+  <p>Você está na tela de transações!</p>
+
+  <form>
+    Tipo:
+    <select ng-model="transacao.tipo">
+      <option value="debito">Débito</option>
+      <option value="credito">Crédito</option>
+    </select>
+    <br />
+    Valor
+    <input ng-model="transacao.valor" id="txtValor" type="text" />
+    <!-- transformar em currency no futuro -->
+    <br />
+    Descrição:
+    <input ng-model="transacao.nome" type="text" />
+  </form>
+
+  <br />
+  <input type="button" value="Registrar" ng-click="registrar()" />
+</div>
+
+relatorio.html:
+
+<div class="home-container">
+  <p>Você está na tela de relatorio!</p>
+
+  <table border="1">
+    <tr>
+      <td>Nome</td>
+      <td>Valor</td>
+      <td>Tipo</td>
+      <td>Data</td>
+    </tr>
+    <tr ng-repeat="item in resposta">
+      <td
+        ng-class="{
+            'debito': item.tipo === 'debito',
+            'credito': item.tipo === 'credito'
+          }"
+      >
+        {{item.nome}}
+      </td>
+      <td
+        ng-class="{
+            'debito': item.tipo === 'debito',
+            'credito': item.tipo === 'credito'
+          }"
+      >
+        {{item.valor | currency:'R$ '}}
+      </td>
+      <td
+        ng-class="{
+            'debito': item.tipo === 'debito',
+            'credito': item.tipo === 'credito'
+          }"
+      >
+        {{item.tipo}}
+      </td>
+      <td
+        ng-class="{
+            'debito': item.tipo === 'debito',
+            'credito': item.tipo === 'credito'
+          }"
+      >
+        {{item.created_at | date:'dd/MM/yyyy HH:mm'}}
+      </td>
+    </tr>
+    <tr>
+      <td
+        colspan="4"
+        ng-class="{'credito': balanco.balanco > 0,
+                                   'debito': balanco.balanco<= 0}"
+      >
+        Saldo: {{balanco.balanco | currency:'R$ '}}
+      </td>
+    </tr>
+  </table>
+</div>
+
+<style>
+  .debito {
+    background-color: lightcoral;
+  }
+
+  .credito {
+    background-color: lightgreen;
+  }
+</style>
